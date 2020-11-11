@@ -1,0 +1,9 @@
+C++ 입출력
+std::cin은 scanf보다 거의 3배가까이 느린것으로 나온다.
+std::ios_base::sync_with_stdio(false);를 사용하면 속도는 높아짐
+std::cout << "\n"; 과 std::cout << std::endl은 20배 이상으로 속도차이가 난다
+
+ios_base::sync_with_stdio(false)는 C와 C++의 버퍼를 분리합니다. 이것을 사용하면 cin/cout이 더 이상 stdin/stdout과 맞춰 줄 필요가 없으므로 속도가 빨라집니다. 단, 버퍼가 분리되었으므로 cin과 scanf, gets, getchar 등을 같이 사용하면 안 되고, cout과 printf, puts, putchar 등을 같이 사용하면 안 됩니다.
+
+cin, cout 사용할 경우
+결론!  C++에서 수행시간을 줄이려면 cin.tie(NULL) , std::ios_base::sync_with_stdio(false);와 std::cout << "\n"를 사용하자.
