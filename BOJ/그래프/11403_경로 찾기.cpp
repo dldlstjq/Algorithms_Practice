@@ -1,11 +1,10 @@
 ﻿/*
-dfs로도 풀 수 있지만 플로이드 알고리즘으로도 풀 수 있다.
+dfs나 bfs로도 풀 수 있지만 플로이드 알고리즘으로도 풀 수 있다.
 다른 정점을 거쳐 자기자신 혹은 다른 정점을 갈 수 있기 때문에 
-플로이드 알고리즘을 적용한 후 값이 INF면 경로가 없고
-INF가 아니면 경로가 있다는 것을 나타낸다.
+처음엔 블로그를 참고했지만 종만북에 친절히 가중치 없는 그래프에서
+각 정점 간 도달 가능성 여부 계산 방법이 나왔다.
 
-처음엔 어떻게 적용해야 하나 싶었는데 다른 곳을 거쳐가면서 
-가중치가 변경되어 새로운 경로가 생기는 것을 알 수 있었다.
+최소치 연산을 OR, 덧셈을 AND로 바꾸면 간단하게 구할 수 있다.
 */
 
 #include <iostream>
@@ -27,7 +26,7 @@ void floyd() {
     for (int k = 0; k < V; ++k)
         for (int i = 0; i < V; ++i)
             for (int j = 0; j < V; ++j)
-                adj[i][j] = min(adj[i][j], adj[i][k] + adj[k][j]);
+                adj[i][j] = adj[i][j] || (adj[i][k] && adj[k][j]);
 }
 
 int main() {
@@ -39,18 +38,13 @@ int main() {
     for (int i = 0; i < V; ++i)
         for (int j = 0; j < V; ++j) {
             cin >> adj[i][j];
-            if (adj[i][j] == 0)
-                adj[i][j] = INF;
         }
 
     floyd();
 
     for (int i = 0; i < V; ++i) {
         for (int j = 0; j < V; ++j) {
-            if (adj[i][j] == INF)
-                cout << 0 << " ";
-            else
-                cout << 1 << " ";
+            cout << adj[i][j] << " ";
         }
         cout << "\n";
     }
