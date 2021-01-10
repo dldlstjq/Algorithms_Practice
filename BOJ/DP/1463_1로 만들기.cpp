@@ -78,3 +78,40 @@ int main() {
 
 	return 0;
 }
+
+
+////////////////////////////////////////////////
+//반복문이 아니라 재귀함수를 이용한 풀이.
+#include <iostream>
+#include <cstring>
+
+using namespace std;
+
+int cache[1000001];
+
+int solve(int start) {
+	//기저 사례
+	if (start == 1)
+		return 0;
+	int& ret = cache[start];
+	if (ret != -1)return ret;
+	ret = 987654321;
+	if (start % 3 == 0)
+		ret = min(ret, solve(start / 3) + 1);
+	if (start % 2 == 0)
+		ret = min(ret, solve(start / 2) + 1);
+	ret = min(ret, solve(start - 1) + 1);
+	return ret;
+}
+
+int main() {
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+
+	memset(cache, -1, sizeof(cache));
+	int n;
+	cin >> n;
+	cout << solve(n);
+
+	return 0;
+}
