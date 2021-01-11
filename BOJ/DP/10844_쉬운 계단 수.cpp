@@ -10,6 +10,28 @@ using namespace std;
 int N;
 int dp[101][11];
 
+//탑다운 재귀함수 풀이
+//자리수가 num이고 끝이 digit인 계단수
+int solve(int num, int digit) {
+    if (num == 1)
+        return digit == 0 ? 0 : 1;
+    int& ret = cache[num][digit];
+    if (ret != -1)return ret;
+
+    //0인 계단수는 1만 가능
+    if (digit == 0)
+        ret = solve(num - 1, 1) % MOD;
+    //9인 계단수는 8만 가능
+    else if (digit == 9)
+        ret = solve(num - 1, 8) % MOD;
+    //그 외에는 +1,-1 가능
+    else
+        ret = (solve(num - 1, digit + 1) + solve(num - 1, digit - 1)) % MOD;
+
+    return ret;
+}
+
+
 int main() {
     ios_base::sync_with_stdio(0);
     cin.tie(0);
