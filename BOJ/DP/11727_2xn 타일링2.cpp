@@ -1,6 +1,23 @@
 ﻿//2019년 8월 풀이. 11726이랑 비슷한 문제
 #include <stdio.h>
 
+//재귀함수로 푼 풀이
+const int MOD = 10007;
+int n;
+int cache[1001];
+
+int solve(int num) {
+	if (num == 1)
+		return 1;
+	if (num == 2)
+		return 3;
+	int& ret = cache[num];
+	if (ret != -1)return ret;
+	ret = 0;
+	ret = (solve(num - 1) + 2 * solve(num - 2)) % MOD;
+	return ret % MOD;
+}
+
 int main()
 {
 	int dp[1001] = { 0 };
