@@ -28,6 +28,26 @@ DP[N - 1] + p[1] 이 된다. N - 1개를 구매했을 때의 최대비용과 1�
 
 using namespace std;
 
+//재귀호출로 푼 풀이.
+//반복문을 재귀함수로 바꾸면 된다.
+int n;
+int cache[1001];
+int card[1001];
+
+int solve(int num) {
+    if (num == 0)
+        return 0;
+    int& ret = cache[num];
+    if (ret != -1)return ret;
+    ret = 0;
+    //점화식. 모든 경우를 다 탐색하면서 최대값을 찾는다.
+    for (int i = 1; i <= num; ++i) {
+        ret = max(ret, solve(num - i) + card[i]);
+    }
+    return ret;
+}
+
+
 int dp[1001];
 
 int Max(int a, int b) {
