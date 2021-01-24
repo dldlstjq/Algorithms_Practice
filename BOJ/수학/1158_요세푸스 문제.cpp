@@ -41,3 +41,45 @@ int main() {
 
     return 0;
 }
+
+
+///////////////////////////////////////
+//리스트를 이용한 풀이
+#include <iostream>
+#include <list>
+using namespace std;
+
+int n, k;
+
+int main() {
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+
+	list<int> li;
+	cin >> n >> k;
+
+	for (int i = 1; i <= n; ++i)
+		li.push_back(i);
+
+	list<int>::iterator iter = li.begin();
+
+	cout << "<";
+	//리스트 iterator를 활용하여 k번째 수를 출력하고 리스트에서 하나씩 지운다.
+	while (n > 0) {
+		for (int i = 0; i < k - 1; ++i) {
+			if (iter == li.end())
+				iter = li.begin();
+			iter++;
+			if (iter == li.end())
+				iter = li.begin();
+		}
+		if (n == 1)
+			cout << *iter;
+		else
+			cout << *iter << ", ";
+		iter = li.erase(iter);
+		n--;
+	}
+	cout << ">";
+	return 0;
+}
