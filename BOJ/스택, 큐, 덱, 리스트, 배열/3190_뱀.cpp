@@ -23,8 +23,8 @@ typedef struct {
 Dir moveDir[4] = { {0, 1}, {1, 0}, {0, -1}, {-1, 0} }; //E S W N
 
 int N, K, L; 
-bool visited[MAX][MAX];
-bool apple[MAX][MAX];
+bool visited[MAX][MAX];	//뱀 몸통 저장
+bool apple[MAX][MAX];	//사과 위치 저장
 
 int main(void) { 
 	ios_base::sync_with_stdio(0);
@@ -59,7 +59,7 @@ int main(void) {
 		if (visited[cur.first][cur.second] || !(0 <= cur.first && cur.first < N && 0 <= cur.second && cur.second < N)) { 
 			cout << sec << "\n"; break;
 		} 
-
+		//몸통 위치 저장
 		visited[cur.first][cur.second] = true; 
 		snake.push_back(cur); 
 		//사과가 있는 위치면 꼬리 그대로 
