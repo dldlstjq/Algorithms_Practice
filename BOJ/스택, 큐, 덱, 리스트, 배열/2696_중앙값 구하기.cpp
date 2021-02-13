@@ -83,3 +83,65 @@ int main() {
 	}
 	return 0;
 }
+
+
+////////////////////////////////
+/*
+종만북 풀이
+1. 최대 힙의 크기는 최소 힙의 크기와 같거나, 하나 더 크다.
+2. 최대 힙의 최대 원소는 최소 힙의 최소 원소보다 작거나 같다.
+
+이제 이 수열의 중간 값은 항상 최대 힙의 루트에 있게 된다.
+둘 중 한 힙에 숫자를 추가해 1번 불변식을 만족시킨 뒤, 2번 불변식이 깨지는 지를 확인.
+꺠지다면 서로의 top을 바꿔주면 됨
+*/
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <queue>
+using namespace std;
+
+
+int main() {
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+
+	int t;
+	cin >> t;
+	while (t--) {
+		int m;
+		cin >> m;
+		priority_queue<int, vector<int>, greater<int>> minHeap;
+		priority_queue<int, vector<int>, less<int>> maxHeap;
+
+		cout << (m / 2) + 1 << "\n";
+		int c = 0;
+		//반복문 불변식
+		//1. maxHeap의 크기는 minHeap의 크기와 같거나 1 더 크다.
+		//2. maxHeap.top <= minHeap.top()
+		for (int cnt = 1; cnt <= m; ++cnt) {
+			int num;
+			cin >> num;
+			//우선 1번 불변식부터 만족시킨다.
+			if (maxHeap.size() == minHeap.size())
+				maxHeap.push(num);
+			else
+				minHeap.push(num);
+			//2번 불변식이 깨졌을 경우 복구하자.
+			if (!minHeap.empty() && !maxHeap.empty() &&
+				minHeap.top() < maxHeap.top()) {
+				int a = maxHeap.top(), b = minHeap.top();
+				maxHeap.pop(); minHeap.pop();
+				maxHeap.push(b);
+				minHeap.push(a);
+			}
+			if (cnt % 2 == 1) {
+				cout << maxHeap.top() << " ";
+				c++;
+				if (c % 10 == 0)cout << "\n";
+			}
+		}
+		cout << "\n";
+	}
+	return 0;
+}
