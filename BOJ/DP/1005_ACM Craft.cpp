@@ -59,3 +59,91 @@ int main() {
 
 	return 0;
 }
+
+
+///////////////////////////////////////
+/*
+위상 정렬 풀이.
+1516-게임 개발 문제와 거의 비슷하다.
+핵심은 더 오래 걸리는 건물 시간을 더해 답을 구하면 된다.
+처음엔 ret 변수 하나로 계산하려 했는데 이전 건물 시간을 가져올 방법이 없었다.
+그래서 ret 배열을 선언해 DP처럼 풀이를 했다.
+*/
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <cstring>
+#include <queue>
+using namespace std;
+
+const int MAX = 1001;
+vector<int> adj[MAX];
+int time[MAX];
+int indegree[MAX];
+int ret[MAX];
+
+int main() {
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+
+    int t;
+    cin >> t;
+    while (t--) {
+        //초기화
+        for (int i = 0; i < MAX; ++i)
+            adj[i].clear();
+        memset(time, 0, sizeof(time));
+        memset(indegree, 0, sizeof(indegree));
+        memset(ret, 0, sizeof(ret));
+
+        int n, k;
+        cin >> n >> k;
+        for (int i = 1; i <= n; ++i) {
+            int d;
+            cin >> d;
+            time[i] = d;
+        }
+
+        for (int i = 0; i < k; ++i) {
+            int x, y;
+            cin >> x >> y;
+            adj[x].push_back(y);
+            indegree[y]++;
+        }
+        int goal;
+        cin >> goal;
+
+        queue<int> q;
+        //indegree가 0인 정점을 큐에 넣고 
+        //해당 정점의 건물을 짓는 시간을 인덱스에 맞게 ret에 저장한다.
+        for (int i = 1; i <= n; ++i) {
+            if (indegree[i] == 0) {
+                q.push(i);
+                ret[i] = time[i];
+            }
+        }
+
+        while (!q.empty()) {
+            int cur = q.front();
+
+            q.pop();
+
+            for (int i = 0; i < adj[cur].size(); ++i) {
+                int next = adj[cur][i];
+                //목표건물을 짓기위해 두 가지이상 건물을 지어야 하면
+                //그 중 건설시간이 오래 걸리는 건물의 시간을 더해야 한다.
+                ret[next] = max(ret[next], ret[cur] + time[next]);
+                indegree[next]--;
+                if (indegree[next] == 0)
+                    q.push(next);
+            }
+            //현재 정점이 goal이면 종료
+            if (cur == goal)
+                break;
+        }
+        //최종 목표 인덱스의 원소가 답
+        cout << ret[goal] << "\n";
+    }
+    return 0;
+}
