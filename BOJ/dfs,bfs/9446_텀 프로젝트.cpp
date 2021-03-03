@@ -61,3 +61,69 @@ int main() {
     }
     return 0;
 }
+
+
+
+//////////////////////////////////////////////////////
+/*
+다른 풀이.
+방문여부와 완료여부 배열을 두 개 두고 dfs를 실행한다.
+방문하지 않은 학생은 dfs를 돌고 방문한 학생으로 돌아오면
+다시 사이클을 돌면서 학생 수를 카운트한다.
+카운트가 다 끝나면 완료됐다는 의미로 finished를 true로 만들어준다.
+최종 답은 전체 n에서 팀이 된 학생수를 빼면 된다.
+*/
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+int arr[100002];
+//방문 여부
+bool visited[100002];
+//사이클이 끝났는지 확인.
+bool finished[100002];
+int cnt;	//사이클에 속하는 정점 개수
+
+//깊이 우선 탐색을 구현한다.
+void dfs(int here) {
+	visited[here] = true;
+	int next = arr[here];
+	//방문했는데 끝나지 않았으면 사이클을 돌면서 학생 수를 센다.
+	if (visited[next]) {
+		if (!finished[next]) {
+			for (int i = next; i != here; i = arr[i])
+				cnt++;
+			cnt++;	//자기 자신
+		}
+	}
+	//방문하지 않았으면 dfs 실행
+	else
+		dfs(next);
+	//다 끝났으면 finished를 true로 만든다.
+	finished[here] = true;
+}
+
+
+int main() {
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+
+	int t;
+	cin >> t;
+	while (t--) {
+		int n;
+		cin >> n;
+		memset(visited, false, sizeof(visited));
+		memset(finished, false, sizeof(finished));
+
+		for (int i = 1; i <= n; ++i)
+			cin >> arr[i];
+		cnt = 0;
+		for (int i = 1; i <= n; ++i) {
+			if (!visited[i])
+				dfs(i);
+		}
+		cout << n - cnt << "\n";
+	}
+	return 0;
+}
