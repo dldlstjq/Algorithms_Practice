@@ -21,9 +21,13 @@ bool COL[MAX][MAX];
 bool SQUARE[MAX][MAX];
 
 void dfs(int cnt) {
+    //cnt를 기준으로 각 칸의 좌표를 계산한다.
+    //cnt의 범위는 0~80
     int y = cnt / MAX;
     int x = cnt % MAX;
 
+    //cnt가 81이라는 것은 모든 칸의 계산이 끝난것이므로
+    //출력하고 종료한다.
     if (cnt == 81) {
         for (int i = 0; i < MAX; i++) {
             for (int j = 0; j < MAX; j++) {
@@ -34,9 +38,10 @@ void dfs(int cnt) {
         exit(0);
     }
 
-    //백트래킹
+    //칸이 비어있으면 하나씩 넣으면서 백트래킹 시도
     if (sudoku[y][x] == 0) {
         for (int i = 1; i <= 9; i++) {
+            //(y,x)에 해당하는 행, 열, 3x3 작은 사각형에 1~9 중 없는 숫자가 있으면 집어넣는다.
             if (ROW[y][i] == false && COL[x][i] == false && SQUARE[(y / 3) * 3 + (x / 3)][i] == false) {
                 ROW[y][i] = true;
                 COL[x][i] = true;
@@ -50,6 +55,7 @@ void dfs(int cnt) {
             }
         }
     }
+    //숫자가 있으면 다음 칸으로 진행
     else
         dfs(cnt + 1);
 
@@ -62,9 +68,11 @@ int main() {
     for (int i = 0; i < MAX; ++i) {
         for (int j = 0; j < MAX; ++j) {
             cin >> sudoku[i][j];
+            //해당 좌표가 0이 아닌경우 각 행, 열, 작은 사각형에 대해 숫자가 있는지 체크
             if (sudoku[i][j] != 0) {
                 ROW[i][sudoku[i][j]] = true;
                 COL[j][sudoku[i][j]] = true;
+                //작은 3x3사각형. 왼쪽 위에서부터 0,1,2...,맨 오른쪽 밑은 8
                 SQUARE[(i / 3) * 3 + (j / 3)][sudoku[i][j]] = true;
             }
         }
