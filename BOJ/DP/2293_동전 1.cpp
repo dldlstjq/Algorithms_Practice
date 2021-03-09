@@ -41,17 +41,27 @@ int main() {
 
 /////////////////////////////////////////
 //재귀로 구현한 코드. 재귀로 해결할거면 2차원배열 사용.
-//근데 이마저도 메모리 초과가 난단다.
-int solve(int start) {
-	if (start == 0)
+//메모리 초과가 난다.
+//다시 플 때 재귀로 해결했다
+
+//cache[i][j]=i원 동전을 사용해서 j원 만들 때 동전 수
+int cache[101][10001];
+
+//solve(0, k)
+int solve(int idx, int sum) {
+	//기저사례: 합이 0되면 딱 맞게 떨어진다.
+	if (sum == 0)
 		return 1;
 
-	int& ret = cache[start];
+	int& ret = cache[idx][sum];
 	if (ret != -1)return ret;
-	ret = 0;
 
-	for (int i = 1; i <= n; ++i)
-		if (start - coin[i] >= 0)
-			ret += solve(start - coin[i]);
+	ret = 0;
+	//idx번째 부터 n-1까지 sum에서 동전종류를 빼면서 값을 계산한다.
+	//sum==0이 되면 카운트.
+	for (int i = idx; i < n; ++i) {
+		if (sum >= coin[i])
+			ret += solve(i, sum - coin[i]);
+	}
 	return ret;
 }
