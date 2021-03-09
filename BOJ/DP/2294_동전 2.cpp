@@ -32,6 +32,25 @@ int solve(int start) {
 	return ret;
 }
 
+//2차원 dp 풀이. 1차원으로 풀 수 있으면 그게 메모리 덜 먹어서 좋긴 하다.
+int solve(int idx, int sum) {
+	//기저사례: 합이 0되면 딱 맞게 떨어진다.
+	if (sum == 0)
+		return 0;
+
+	int& ret = cache[idx][sum];
+	if (ret != -1)return ret;
+
+	ret = INF;
+	//idx번째 부터 n-1까지 sum에서 동전종류를 빼면서 값을 계산한다.
+	//sum==0이 되면 카운트.
+	for (int i = idx; i < n; ++i) {
+		if (sum >= coin[i])
+			ret = min(ret, solve(i, sum - coin[i]) + 1);
+	}
+	return ret;
+}
+
 int main() {
 	ios_base::sync_with_stdio(0);
 	cin.tie(0);
