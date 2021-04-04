@@ -52,6 +52,8 @@ int main() {
     for (int i = 0; i < N; i++)
         cin >> arr[i];
 
+    //여기서 반복문으로 0~N-1까지 다 돌리면 정확한 값이 안나온다.
+    //dfs 내부 dfs(idx + 1, sum - arr[idx]); --> 여기서 idx=0에서 sum-arr[idx]=0이 되어 카운트된다.
     dfs(0, 0);
     cout << cnt;
     return 0;
