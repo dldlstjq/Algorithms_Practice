@@ -7,6 +7,14 @@ dp[i]의 점화식은 max(dp[i+1],dp[i+t[i])+p[i]) 가 된다.
 
 */
 
+/*
+2021.04.06 다시 품
+문제를 보자마자 dp가 생각났지만 반복문을 돌며 하루씩 계산하면 답이 나올 것 같아
+백트래킹 방식으로 해결하려 했다. 문제는 상담기간과 해당 날짜의 합이 언제일때 상담을 하지 못하냐인데 이걸 해결하는 것에서 막혔다.
+
+해당 날짜에 상담을 하느냐 마느냐로 점화식을 세워 들어가면 금방 풀 수 있었는데 시간도 오래 걸리고 해결도 못했다.
+*/
+
 #include <cstdio>
 #include <algorithm>
 #include <cstring>
@@ -16,8 +24,11 @@ int n;
 int time[16], price[16];
 int cache[16];
 int func(int pos) {
+	//pos+time[pos]=n+1이면 더이상 일을 하지 못한다.
+	//예로 n=7이고 pos=4 일때 time[4]=4면 4,5,6,7 동안 상담하므로 더이상 상담을 할 수가 없다.
 	if (pos == n + 1)
 		return 0;
+	//그 이상 넘어가면 일 못함
 	if (pos > n + 1)
 		return -987654321;
 	int& ret = cache[pos];
