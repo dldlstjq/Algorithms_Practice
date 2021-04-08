@@ -81,3 +81,77 @@ int main() {
 
     return 0;
 }
+
+
+
+/////////////////////////////////////////
+/*
+2021.04.08 다시 품
+백트래킹을 이용해서 한 명씩 배열에 넣고 배열 크기가 N/2가 되면 나머지 인원을 link에 넣었다.
+그 후 능력치 합을 계산해 차가 최소가 되는 값을 갱신했다.
+
+처음 푼 풀이를 보니 조합을 이용해서 해결했는데 그 때는 이런 생각을 어떻게 이런 생각을 했는지 신기하다.
+*/
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+int N;
+int graph[20][20];
+bool member[20];
+int ret = 987654321;
+
+//능력치 합
+int calc(vector<int>& v) {
+    int ability = 0;
+    for (int i = 0; i < v.size() - 1; ++i) {
+        for (int j = i + 1; j < v.size(); ++j) {
+            ability += graph[v[i]][v[j]] + graph[v[j]][v[i]];
+        }
+    }
+    return ability;
+}
+
+void solve(int idx, vector<int>& start) {
+    //한 팀의 팀원이 절반이면 나머지 반을 link에 넣는다.
+    if (start.size() == N / 2) {
+        vector<int> link;
+        for (int j = 0; j < N; ++j) {
+            if (!member[j])
+                link.push_back(j);
+        }
+
+        //능력치 계산 후 최소값 갱신
+        int sum1 = calc(start);
+        int sum2 = calc(link);
+        ret = min(ret, abs(sum1 - sum2));
+        return;
+    }
+
+    //0~N-1까지 멤버를 한명씩 넣어본다.
+    for (int i = idx; i < N; ++i) {
+        start.push_back(i);
+        member[i] = true;
+        solve(i + 1, start);
+        start.pop_back();
+        member[i] = false;
+    }
+
+}
+
+int main() {
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+
+    cin >> N;
+    for (int i = 0; i < N; ++i)
+        for (int j = 0; j < N; ++j)
+            cin >> graph[i][j];
+
+    vector<int> v;
+    solve(0, v);
+
+    cout << ret;
+    return 0;
+}
