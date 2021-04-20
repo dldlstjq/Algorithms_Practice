@@ -9,6 +9,234 @@
 이동하도록 했다. row와 col의 사이즈가 없어진 행, 열의 갯수인데 r,c라는 변수를 하나 더 생성했다.
 */
 
+//2021.04.20 다시 풀이
+//블록을 내려줄때 인덱스 설정을 for문 안에서 말고(9-cnt) 값을 바꿔줄때 i-cnt로 해주는게 더 보기 좋을 것 같다.
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+const int MAX = 10;
+int board[MAX][MAX];
+int copy_board[MAX][MAX];
+
+int N;
+int ret;
+
+void move_block(int t, int x, int y) {
+
+    if (t == 1) {
+        int r = x, c = y;
+        //초록색 칸
+        while (1) {
+            r += 1;
+            if (r >= MAX || board[r][c] == 1) {
+                r -= 1;
+                break;
+            }
+        }
+        board[r][c] = 1;
+
+        r = x, c = y;
+        //파란색 칸
+        while (1) {
+            c += 1;
+            if (c >= MAX || board[r][c] == 1) {
+                c -= 1;
+                break;
+            }
+        }
+        board[r][c] = 1;
+    }
+
+    else if (t == 2) {
+        int r = x, c = y;
+        //초록색 칸. 밑으로 내려갈 때 둘다 검사
+        while (r + 1 < MAX && board[r + 1][c] != 1 && board[r + 1][c + 1] != 1) {
+            r += 1;
+        }
+        board[r][c] = 1; board[r][c + 1] = 1;
+
+        r = x, c = y;
+        //파란색 칸. 가장 오른쪽 블록만 확인
+        while (c + 2 < MAX && board[r][c + 2] != 1) {
+            c += 1;
+        }
+        board[r][c] = 1; board[r][c + 1] = 1;
+    }
+
+    else if (t == 3) {
+        int r = x, c = y;
+        //초록색 칸. 밑으로 내려갈 때 둘다 검사
+        while (r + 2 < MAX && board[r + 2][c] != 1) {
+            r += 1;
+        }
+        board[r][c] = 1; board[r + 1][c] = 1;
+
+        r = x, c = y;
+        //파란색 칸. 가장 오른쪽 블록만 확인
+        while (c + 1 < MAX && board[r][c + 1] != 1 && board[r + 1][c + 1] != 1) {
+            c += 1;
+        }
+        board[r][c] = 1; board[r + 1][c] = 1;
+    }
+}
+
+//초록색, 파란색 칸 확인
+void is_full() {
+    //초록색
+    vector<int> v;
+    for (int i = 6; i < MAX; ++i) {
+        int cnt = 0;
+        for (int j = 0; j < 4; ++j) {
+            if (board[i][j] == 1)
+                cnt++;
+        }
+        //해당 행에 블록이 가득 차면 점수 올리고 지운다.
+        if (cnt == 4) {
+            ret++;
+            v.push_back(i);
+            for (int j = 0; j < 4; ++j)
+                board[i][j] = 0;
+        }
+
+    }
+
+    if (!v.empty()) {
+        int last_row = v.back();
+        int size = v.size();
+        //last_row-size 부터 연한 칸까지 없어진 수만큼 블록을 내린다.
+        for (int i = last_row - size; i >= 4; --i) {
+            for (int j = 0; j < 4; ++j) {
+                board[i + size][j] = board[i][j];
+                board[i][j] = 0;
+            }
+        }
+    }
+
+
+    v.clear();
+
+    //파란색
+    for (int i = 6; i < MAX; ++i) {
+        int cnt = 0;
+        for (int j = 0; j < 4; ++j) {
+            if (board[j][i] == 1)
+                cnt++;
+        }
+        //해당 행에 블록이 가득 차면 점수 올리고 지운다.
+        if (cnt == 4) {
+            ret++;
+            v.push_back(i);
+            for (int j = 0; j < 4; ++j)
+                board[j][i] = 0;
+        }
+
+    }
+
+    if (!v.empty()) {
+        int last_row = v.back();
+        int size = v.size();
+        //last_row-size 부터 연한 칸까지 없어진 수만큼 블록을 내린다.
+        for (int i = last_row - size; i >= 4; --i) {
+            for (int j = 0; j < 4; ++j) {
+                board[j][i + size] = board[j][i];
+                board[j][i] = 0;
+            }
+        }
+    }
+
+}
+
+void check_light() {
+    //연한 초록색. 행이나 열에 블록이 있으면 cnt가 카운트된다.
+    int cnt = 0;
+    for (int i = 4; i <= 5; ++i) {
+        for (int j = 0; j < 4; ++j) {
+            if (board[i][j]) {
+                cnt++;
+                break;
+            }
+
+        }
+    }
+
+    if (cnt != 0) {
+        //cnt 수만큼 블록을 내린다.
+        for (int i = 9 - cnt; i >= 4; --i) {
+            for (int j = 0; j < 4; ++j) {
+                board[i + cnt][j] = board[i][j];
+                board[i][j] = 0;
+            }
+        }
+    }
+
+
+    //연한 파란색
+    cnt = 0;
+    for (int i = 4; i <= 5; ++i) {
+        for (int j = 0; j < 4; ++j) {
+            if (board[j][i]) {
+                cnt++;
+                break;
+            }
+
+        }
+    }
+
+    if (cnt != 0) {
+        //cnt 수만큼 블록을 내린다.
+        for (int i = 9 - cnt; i >= 4; --i) {
+            for (int j = 0; j < 4; ++j) {
+                board[j][i + cnt] = board[j][i];
+                board[j][i] = 0;
+            }
+        }
+    }
+
+}
+
+int block_cnt() {
+    int cnt = 0;
+
+    for (int i = 6; i < MAX; ++i) {
+        for (int j = 0; j < 4; ++j) {
+            if (board[i][j] == 1)
+                cnt++;
+        }
+    }
+
+    for (int i = 6; i < MAX; ++i) {
+        for (int j = 0; j < 4; ++j) {
+            if (board[j][i] == 1)
+                cnt++;
+        }
+    }
+    return cnt;
+}
+
+int main() {
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+
+    cin >> N;
+    for (int i = 0; i < N; ++i) {
+        int t, x, y;
+        cin >> t >> x >> y;
+
+        move_block(t, x, y);    //블록 이동
+
+        is_full();  //행이나 열이 가득찼는지 확인
+        check_light();  //연한 부분 체크
+
+    }
+    cout << ret << "\n";
+    cout << block_cnt();
+    return 0;
+}
+
+///////////////////////// 다른 사람 참고한 풀이
+
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -438,101 +666,4 @@ int main() {
 	cout << resultblock << "\n";
 
 	return 0;
-}
-
-
-
-
-
-//////////////////////////////////
-/*
-처음에 접근한 입력. 1x2 블록을 옮길때 이상이 있었던 것 같다.
-*/
-
-//입력에 맞는 블록을 초록색, 파란색 칸으로 계속이동한다.
-//중간에 블록이 있거나 경계에 도착하면 멈춘다.
-void input(int t, int x, int y) {
-    //1x1 (x,y)
-    if (t == 1) {
-        bool fin = false;
-        //초록색 칸
-        for (int i = x; i < 9; ++i) {
-            if (board[i + 1][y] == 1) {
-                fin = true;
-                board[i][y] = 1;
-                break;
-            }
-        }
-        //중간에 아무런 블록도 없다면 경계선에 놓는다
-        if (!fin)
-            board[9][y] = 1;
-
-        fin = false;
-        //파란색 칸
-        for (int i = y; i < 9; ++i) {
-            if (board[x][i + 1] == 1) {
-                fin = true;
-                board[x][i] = 1;
-                break;
-            }
-        }
-        if (!fin)
-            board[x][9] = 1;
-    }
-
-    //1x2 (x,y) (x,y+1)
-    else if (t == 2) {
-        bool fin = false;
-        //초록색 칸
-        for (int i = x; i < 9; ++i) {
-            if (board[i + 1][y] == 1 || board[i + 1][y + 1] == 1) {
-                fin = true;
-                board[i][y] = board[i][y + 1] = 1;
-                break;
-            }
-        }
-        //중간에 아무런 블록도 없다면 경계선에 놓는다
-        if (!fin)
-            board[9][y] = board[9][y + 1] = 1;
-
-        fin = false;
-        //파란색 칸
-        for (int i = y; i < 9; i += 2) {
-            if (board[x][i + 2] == 1 || board[x][i + 1 + 2] == 1) {
-                fin = true;
-                board[x][i] = board[x][i + 1] = 1;
-                break;
-            }
-        }
-        if (!fin)
-            board[x][8] = board[x][9] = 1;
-    }
-
-    //2x1 (x,y) (x+1,y)
-    else if (t == 3) {
-        bool fin = false;
-        //초록색 칸
-        for (int i = x; i < 9; i += 2) {
-            if (board[i + 2][y] == 1 || board[i + 1 + 2][y] == 1) {
-                fin = true;
-                board[i][y] = board[i + 1][y] = 1;
-                break;
-            }
-        }
-        //중간에 아무런 블록도 없다면 경계선에 놓는다
-        if (!fin)
-            board[8][y] = board[9][y] = 1;
-
-        fin = false;
-        //파란색 칸
-        for (int i = y; i < 9; ++i) {
-            if (board[x][i + 1] == 1 || board[x + 1][i + 1] == 1) {
-                fin = true;
-                board[x][i] = board[x + 1][i] = 1;
-                break;
-            }
-        }
-        if (!fin)
-            board[x][9] = board[x + 1][9] = 1;
-    }
 }
