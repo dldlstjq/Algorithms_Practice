@@ -2,6 +2,128 @@
 어려운 문제. 이런 유형을 많이 못푸는데 다시 한번 볼 필요가 있다.
 */
 
+/*다른 사람 풀이랑 비슷하게 했는데 시간초과가 난다.*/
+#include<iostream>
+#include <vector>
+#include <algorithm>
+#include <queue>
+using namespace std;
+const int MAX = 15;
+const int INF = 987654321;
+int N, W, H;
+int board[MAX][MAX];
+
+int dy[4] = { -1,0,1,0 };
+int dx[4] = { 0,1,0,-1 };
+
+int ret;
+
+bool is_in(int y, int x) {
+    return 0 <= y && y < H && 0 <= x && x < W;
+}
+
+void bomb(int r, int c) {
+    //board[r][c] = 0;
+    queue<pair<int, int>> q;
+    q.push({ r,c });
+
+    while (!q.empty()) {
+        int y = q.front().first;
+        int x = q.front().second;
+        int num = board[y][x];
+        q.pop();
+
+        board[y][x] = 0;
+
+        if (num == 1)
+            continue;
+
+        for (int j = 1; j <= num - 1; ++j) {
+            for (int i = 0; i < 4; ++i) {
+                int ny = y + dy[i] * j;
+                int nx = x + dx[i] * j;
+
+                if (is_in(ny, nx) && board[ny][nx] != 0)
+                    q.push({ ny,nx });
+            }
+        }
+    }
+}
+
+void down() {
+
+    for (int i = 0; i < W; i++) {
+        for (int j = H - 1; j >= 1; j--) {
+            for (int k = j - 1; k >= 0; k--) {
+                if (board[j][i] != 0) break;
+                if (board[k][i] != 0) {
+                    board[j][i] = board[k][i];
+                    board[k][i] = 0;
+                    break;
+                }
+            }
+        }
+    }
+}
+
+void solve(int n) {
+    if (n == N) {
+        int cnt = 0;
+        for (int i = 0; i < H; ++i)
+            for (int j = 0; j < W; ++j)
+                if (board[i][j] != 0)
+                    cnt++;
+
+        ret = min(ret, cnt);
+        return;
+    }
+
+    int copy_board[MAX][MAX];
+    for (int i = 0; i < H; ++i)
+        for (int j = 0; j < W; ++j)
+            copy_board[i][j] = board[i][j];
+
+
+    for (int i = 0; i < W; ++i) {
+        int height = 0, y = i;
+        while (is_in(height, y) && board[height][y] == 0)
+            height++;
+
+        bomb(height, y);
+        down();
+        solve(n + 1);
+
+        for (int j = 0; j < H; ++j)
+            for (int k = 0; k < W; ++k)
+                board[j][k] = copy_board[j][k];
+    }
+}
+int main(int argc, char** argv)
+{
+    int test_case;
+    int T;
+
+    cin >> T;
+    /*
+       여러 개의 테스트 케이스가 주어지므로, 각각을 처리합니다.
+    */
+    for (test_case = 1; test_case <= T; ++test_case)
+    {
+        ret = INF;
+        cin >> N >> W >> H;
+        for (int i = 0; i < H; ++i)
+            for (int j = 0; j < W; ++j)
+                cin >> board[i][j];
+
+        solve(0);
+
+        cout << "#" << test_case << " " << ret << "\n";
+
+    }
+    return 0;//정상종료시 반드시 0을 리턴해야합니다.
+}
+
+////////////////////
 #include <iostream>
 #include <math.h>
 #include <vector>
