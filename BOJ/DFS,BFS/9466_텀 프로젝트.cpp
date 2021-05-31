@@ -31,11 +31,15 @@ int dfs(int start, int cur, int dep) {
 
     int next = arr[cur];
 
+	// 방문하지 않았으면 dfs 실행
     if (visit[next] == 0) {
         dfs(start, next, dep + 1);
     }
+	// 방문했고 start와 cycle[next]가 같으면 사이클 처음으로 돌아왔다.
+	// 깊이 차이로 팀 수 카운트
     else if (visit[next] != 0 && start == cycle[next])
         return dep - visit[next] + 1;
+	// 시작점이 다르면 사이클이 안된다.
     else if (visit[next] != 0 && start != cycle[next])
         return 0;
 }
