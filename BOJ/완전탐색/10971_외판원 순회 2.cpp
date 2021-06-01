@@ -10,6 +10,62 @@ if문에서 방문 도시가 N개일때만 설정해서 리턴하니 틀렸다.
 
 */
 
+// 2021.06.01 백트래킹을 이용해서 풀었다. 4.2 풀었던 것보다는 조금 간결하다.
+#include <iostream> 
+#include <vector> 
+#include <algorithm>
+using namespace std;
+
+int N;
+int W[10][10];
+bool visited[10];
+int ret = 987654321;
+
+// start는 출발도시, now 현재 도시, cnt 방문한 도시 수, cost는 비용
+void TSP(int start, int now, int cnt, int cost) {
+    // 모든 도시 방문 후 다시 처음으로 되돌아 온다.
+    if (cnt == N) {
+        if (W[now][start] == 0)
+            return;
+        cost += W[now][start];
+        ret = min(ret, cost);
+        return;
+    }
+
+    for (int i = 0; i < N; ++i) {
+        // 길이 있고 방문 안한 경우 방문
+        if (W[now][i] != 0 && !visited[i]) {
+            visited[i] = true;
+            TSP(start, i, cnt + 1, cost + W[now][i]);
+            visited[i] = false;
+        }
+
+    }
+
+}
+
+int main(int argc, char** argv) {
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    cout.tie(0);
+
+    cin >> N;
+    for (int i = 0; i < N; ++i)
+        for (int j = 0; j < N; ++j)
+            cin >> W[i][j];
+
+    // 0~N-1까지 차례대로 시작해서 최소를 구한다.
+    for (int i = 0; i < N; ++i) {
+        visited[i] = true;
+        TSP(i, i, 1, 0);
+        visited[i] = false;
+    }
+
+    cout << ret;
+
+    return 0;
+}
+
 /*
 정답코드
 */
