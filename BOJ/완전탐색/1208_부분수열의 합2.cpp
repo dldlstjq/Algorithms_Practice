@@ -115,6 +115,7 @@ int n, s, half;
 long long ans;
 map<int, int> mp;
 
+// 왼쪽 반 집합의 모든 부분집합을 구해보고 mp 맵을 채움
 void dfsLeft(int idx, int sum) {
     if (idx == half) {
         mp[sum]++; return;
@@ -123,8 +124,10 @@ void dfsLeft(int idx, int sum) {
     dfsLeft(idx + 1, sum + v[idx]);
 }
 
+// 오른족 반쪽 집합의 모든 부분집합을 구해보고 ans 갱신
 void dfsRight(int idx, int sum) {
     if (idx == n) {
+        // 만약 mp[s - sum]이 0이 아니라면 그만큼 ans에 더한다.
         ans += mp[s - sum]; return;
     }
     dfsRight(idx + 1, sum);
@@ -136,8 +139,8 @@ int main() {
     cin >> n >> s;
     half = n / 2; v.resize(n);
     for (int i = 0; i < n; i++) cin >> v[i];
-    dfsLeft(0, 0);
-    dfsRight(half, 0);
-    if (s == 0) ans--;
+    dfsLeft(0, 0);  // 왼쪽 절반 탐색
+    dfsRight(half, 0);  // 오른쪽 절반 탐색
+    if (s == 0) ans--;  // s == 0 일때, 공집합은 세지 않기 때문에 결과 1 줄여야 한다.
     cout << ans;
 }
