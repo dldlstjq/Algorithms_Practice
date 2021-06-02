@@ -7,6 +7,9 @@
 선택해서 건설 시간과 더해 값을 구하면 되는 거였다.
 */
 
+// 2021.06.02 dp와 위상정렬 관련 문제인 것 같은데 풀이가 딱히 생각나지 않았다.
+// 오래 안풀다 풀려고 하니 생각이 잘 안난다.
+
 #include <iostream>
 #include <cstring>
 #include <algorithm>
