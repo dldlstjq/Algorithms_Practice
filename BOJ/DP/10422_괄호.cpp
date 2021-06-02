@@ -16,6 +16,8 @@ long long 자료형에 % 1,000,000,007을 한번에 해주면 이미 해주기 �
 매번 더해질때마다 해줘야 함.
 */
 
+// 2021.06.02 다시 풀기. 점화식이 생각이 안난다.
+
 #include <iostream>
 #include <algorithm>
 #include <cstring>
