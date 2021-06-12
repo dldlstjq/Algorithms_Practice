@@ -2,7 +2,8 @@
 //하지만 규칙적으로 증가하지 않아서 인터넷 보고 해결
 //2차원 DP 사용. DP[a][b]=길이가 a일 때 마지막 수가 b일 계단의 수 의미
 
-
+// 2021.06.12 오랜만에 보니까 dp도 잘 못풀겠다. 탑다운, 바텀업 둘 다 풀이 가능한데 익숙한 탑다운 방식으로 푸는게 낫겠다.
+// 끝이 0,9는 예외처리하고 나머지는 -1,+1 하면 쉽게 답을 구할 수 있다.
 #include <iostream>
 
 using namespace std;
@@ -57,11 +58,18 @@ int main() {
         }
     }
 
+    // 바텀업
     long long ans = 0;
     for (int i = 0; i < 10; i++) {
         ans += dp[N][i];
     }
     cout << ans % MOD;
+
+    //탑다운
+    int ans = 0;
+    for (int i = 0; i <= 9; ++i)
+        ans = (ans + solve(n, i)) % MOD;
+    cout << ans;
 
     return 0;
 }
