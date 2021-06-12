@@ -5,6 +5,8 @@ cache를 0으로 초기화하여 팰린드롬이면 1을 반환하도록 했는�
 재귀함수를 쓰지 않고도 해결할 수 있다.
 */
 
+// 2021.06.13 재귀 풀이와 똑같이 풀었고 정답을 쉽게 받았다.
+
 #include <iostream>
 #include <algorithm>
 #include <cstring>
