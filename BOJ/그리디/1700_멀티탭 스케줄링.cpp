@@ -3,6 +3,97 @@
 가장 적게 사용하는 걸 빼고 넣으면 되는줄 알았는데
 가장 나중에 사용하거나 이후 안쓰일 코드를 빼야했다.
 */
+
+
+// 2021.06.14 풀이
+/* 
+1. 비어있으면 꽂는다.
+2. 이미 꽂혀있으면 패스
+3. 꽂을 구멍이 없으면 탭에 있는 것 중 안쓰일 제품이나 가장 나중에 사용되는 제품을 뺀다.
+-> 단순히 빈도 수로 계산하면 답이 안나옴.
+*/
+
+#include <iostream> 
+#include <vector> 
+#include <algorithm>
+using namespace std;
+
+int N, K;
+vector<int> v;
+
+bool cmp(pair<int, int>a, pair<int, int>b) {
+	return a.second > b.second;
+}
+
+int main(int argc, char** argv) {
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+	cout.tie(0);
+
+	cin >> N >> K;
+	vector<pair<int, int>> tab;
+	tab.resize(N);
+
+	for (int i = 0; i < K; ++i) {
+		int elec;
+		cin >> elec;
+		v.push_back(elec);
+	}
+
+	int ret = 0;
+	for (int i = 0; i < K; ++i) {
+		int cnt = 0;
+		for (int j = 0; j < N; ++j) {
+			// 비었으면 탭에 꽂는다.
+			if (!tab[j].first) {
+				tab[j].first = v[i];
+				break;
+			}
+			// 이미 탭에 있으면 ok
+			else if (tab[j].first == v[i])
+				break;
+			// 탭에 없으면 cnt 증가
+			else if (tab[j].first != v[i])
+				cnt++;
+		}
+
+		// 멀티탭이 다 사용중이다.
+		// 남은 것들 중 다시 사용되는게 있는지 검사하는게 필요할듯.
+		// 운체에 최적 알고리즘이랑 비슷한데 미래에 어떤게 가장 시간이 적은지 찾는게 어려워 잘 안쓰인다고 했다.
+		if (cnt == N) {
+			// tab의 second는 101로 초기화 한다. K가 최대 100이기 때문에 101로 만듬.
+			for (int a = 0; a < N; ++a)
+				tab[a].second = 101;
+
+			// i+1부터 K까지 돌면서 이미 멀티탭에 있는 제품 중 가장 먼저 나오는 인덱스를 저장한다.
+			for (int b = i + 1; b < K; ++b) {
+				for (int c = 0; c < N; ++c) {
+					if (tab[c].second == 101 && v[b] == tab[c].first) {
+						tab[c].second = b;
+						break;
+					}
+
+				}
+			}
+
+			// second 기준으로 내림차순 정렬
+			// 내림차순 정렬하면 이미 꽂힌 제품 중 가장 나중에 사용되는 제품이 맨 앞에 온다.
+			// 안쓰일 제품이라면 101이므로 가장 앞에 올 수 있음. 최대 사용횟수는 100
+			// 그걸 뽑고 새로 꽂으면 최소횟수로 사용 가능
+			sort(tab.begin(), tab.end(), cmp);
+			tab[0].first = v[i];
+			tab[0].second = 0;
+			ret++;
+
+		}
+	}
+
+	cout << ret;
+
+	return 0;
+}
+
+
 //정답 코드
 #include <iostream>
 
