@@ -11,6 +11,9 @@
 재귀함수쪽은 진짜 연습이 많이 필요한 것 같다.
 */
 
+// 2021.06.29 다시 풀어보기. 두 동전 좌표 저장하는 것부터 복잡해졌다. 단순 bfs를 쓰려면 visited를 4차원으로 설정.
+// bfs 아니라면 재귀로 들어가야 하는데 재귀도 인자를 잘 설정해야한다. 
+
 #include <iostream>
 #include <vector>
 #include <algorithm>
