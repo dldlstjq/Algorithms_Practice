@@ -4,6 +4,8 @@
 풀이가 이해가 안되는 문제. 일단 코드는 기록.
 */
 
+// 다시 봐도 어렵다.
+
 #include <iostream>
 using namespace std;
 
