@@ -14,6 +14,128 @@
 // 2021.06.29 다시 풀어보기. 두 동전 좌표 저장하는 것부터 복잡해졌다. 단순 bfs를 쓰려면 visited를 4차원으로 설정.
 // bfs 아니라면 재귀로 들어가야 하는데 재귀도 인자를 잘 설정해야한다. 
 
+// bfs 풀이. 정답이 나오긴 하는데 재귀보다 메모리와 시간을 더 많이 잡아먹는다. 재귀 쓰자.
+/*
+bfs: 88596KB, 136ms
+재귀: 2016KB, 56ms
+*/
+#include <iostream> 
+#include <vector> 
+#include <algorithm>
+#include <queue>
+using namespace std;
+
+const int MAX = 20 + 1;
+int N, M;
+char board[MAX][MAX];
+
+struct point {
+    int y1 = -1; int x1 = -1;
+    int y2 = -1; int x2 = -1;
+    int cnt = 0;
+};
+
+int dy[4] = { -1,0,1,0 };
+int dx[4] = { 0,1,0,-1 };
+queue<point> q;
+
+int ret;
+bool flag;
+
+// 범위 확인
+bool is_in(int y, int x) {
+    return 0 <= y && y < N && 0 <= x && x < M;
+}
+
+void solve() {
+    while (!q.empty()) {
+        point np = q.front();
+        q.pop();
+
+        // 둘 다 아웃
+        if (!is_in(np.y1, np.x1) && !is_in(np.y2, np.x2))
+            continue;
+
+        // 10번 이상 누르면 탈출.
+        if (np.cnt > 10) {
+            flag = false;
+            ret = np.cnt;
+            break;
+        }
+
+        // 둘 중 하나만 아웃이면 ok
+        if (!is_in(np.y1, np.x1) && is_in(np.y2, np.x2)) {
+            flag = true;
+            ret = np.cnt;
+            break;
+        }
+
+        if (is_in(np.y1, np.x1) && !is_in(np.y2, np.x2)) {
+            flag = true;
+            ret = np.cnt;
+            break;
+        }
+
+        for (int i = 0; i < 4; ++i) {
+            int ny1 = np.y1 + dy[i];
+            int nx1 = np.x1 + dx[i];
+            int ny2 = np.y2 + dy[i];
+            int nx2 = np.x2 + dx[i];
+
+            // 범위 안에 있고 벽이면 그대로
+            if (is_in(ny1, nx1) && board[ny1][nx1] == '#') {
+                ny1 = np.y1;
+                nx1 = np.x1;
+            }
+
+            if (is_in(ny2, nx2) && board[ny2][nx2] == '#') {
+                ny2 = np.y2;
+                nx2 = np.x2;
+            }
+
+            q.push({ ny1,nx1,ny2,nx2,np.cnt + 1 });
+        }
+
+    }
+}
+
+
+int main(int argc, char** argv) {
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    cout.tie(0);
+
+
+    point p;
+
+    cin >> N >> M;
+
+    for (int i = 0; i < N; ++i)
+        for (int j = 0; j < M; ++j) {
+            cin >> board[i][j];
+            // y1, y2를 -1로 초기화함. -1이란 것은 값이 들어가있지 않다.
+            if (board[i][j] == 'o' && p.y1 == -1) {
+                p.y1 = i; p.x1 = j;
+            }
+            else if (board[i][j] == 'o' && p.y2 == -1) {
+                p.y2 = i; p.x2 = j;
+            }
+        }
+
+    q.push(p);
+
+    solve();
+
+    // flag= true이며 답이 있고 false면 답이 없다.
+    if (flag)
+        cout << ret;
+    else
+        cout << -1;
+
+    return 0;
+}
+
+
 #include <iostream>
 #include <vector>
 #include <algorithm>
