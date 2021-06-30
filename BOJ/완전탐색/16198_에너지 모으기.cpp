@@ -47,3 +47,53 @@ int main() {
     cout << solve(v);
     return 0;
 }
+
+
+// 2021.06.30 백트래킹을 사용하는데 원래 배열의 원소를 삭제하고 삽입하는 방식으로 풀었다.
+// 이때 풀었던 것보다 위에서 풀듯이 따로 배열을 선언해서 하는게 더 간편하고 덜 복잡할것 같다.
+#include <iostream> 
+#include <vector> 
+#include <algorithm>
+using namespace std;
+
+const int MAX = 10 + 1;
+int N;
+vector<int> energy;
+int ret;
+
+void solve(int sum) {
+    // 배열에 원소가 2개만 남으면 최댓값 구하고 종료
+    if (energy.size() == 2) {
+        ret = max(ret, sum);
+        return;
+    }
+
+    // 맨 끝은 제외이므로 인덱스 1부터 맨 마지막-1까지
+    for (int i = 1; i < energy.size() - 1; ++i) {
+        int num = energy[i];    // 현재 인덱스 해당하는 배열 값
+        int ans = sum;
+        ans += energy[i - 1] * energy[i + 1];    //에너지 합
+        energy.erase(energy.begin() + i);    // 삭제
+        solve(ans);
+        energy.insert(energy.begin() + i, num);    // 다시 삽입
+    }
+
+}
+
+int main(int argc, char** argv) {
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    cout.tie(0);
+
+    cin >> N;
+    for (int i = 0; i < N; ++i) {
+        int n;
+        cin >> n;
+        energy.push_back(n);
+    }
+
+    solve(0);
+
+    cout << ret;
+    return 0;
+}
