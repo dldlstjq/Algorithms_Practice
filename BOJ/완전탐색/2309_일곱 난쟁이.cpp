@@ -11,54 +11,11 @@
 */
 
 /*
-* 2021.07.01 처음부터 하나씩 더해가며 100이 되는걸 찾아도 되고 다 더해서 2개씩 빼도 된다.
+* 2021.07.01 다시 풀어도 풀이가 생각 안났다. 처음부터 하나씩 더해가며 100이 되는걸 찾는 줄 알았는데
 * 다 더하고 난 후 2개씩 빼면서 확인하면 더 쉽게 찾을 수 있다.
 */
 
-// 하나씩 더하면서 찾는 방법. 찾고 나면 exit(0)으로 종료해야 된다.
-#include <iostream> 
-#include <vector> 
-#include <algorithm>
-using namespace std;
 
-vector<int> tall;
-vector<int> ret;
-
-void solve(int idx, int sum, int cnt) {
-    if (cnt == 7 && sum == 100) {
-        sort(ret.begin(), ret.end());
-        for (int i = 0; i < ret.size(); ++i)
-            cout << ret[i] << '\n';
-        exit(0);
-    }
-
-    for (int i = idx; i < 9; ++i) {
-        if (sum + tall[i] > 100)
-            continue;
-        ret.push_back(tall[i]);
-        solve(idx + 1, sum + tall[i], cnt + 1);
-        ret.pop_back();
-    }
-}
-
-int main(int argc, char** argv) {
-    ios_base::sync_with_stdio(0);
-    cin.tie(0);
-    cout.tie(0);
-
-    for (int i = 0; i < 9; ++i) {
-        int n;
-        cin >> n;
-        tall.push_back(n);
-    }
-
-    solve(0, 0, 0);
-
-    return 0;
-}
-
-////////////////////////////////
-//다 더해서 2개씩 빼는 방법
 #include <iostream>
 #include <vector>
 #include <algorithm>
