@@ -9,6 +9,80 @@
 0이 들어가면 안되는건 생각하지 못해 처음에 오답을 받았다.
 */
 
+// 2021.07.02 세 개 숫자가 모두 달라야하는것, 0은 포함되지 않는다는것만 잘 확인하면 쉽게 풀 수 있다.
+#include <iostream> 
+#include <string>
+using namespace std;
+
+const int MAX = 1000 + 1;
+int N;
+bool arr[MAX];
+
+bool match(int s, int b, int n, int goal) {
+    int strike = 0, ball = 0;
+
+    string s1 = to_string(n);
+    string s2 = to_string(goal);
+
+    for (int i = 0; i < s1.length(); ++i) {
+        for (int j = 0; j < s2.length(); ++j) {
+            if (s1[i] == s2[j] && i == j)
+                strike++;
+            else if (s1[i] == s2[j] && i != j)
+                ball++;
+        }
+    }
+
+    if (strike == s && ball == b)
+        return true;
+    else
+        return false;
+}
+
+int main(int argc, char** argv) {
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    cout.tie(0);
+
+    cin >> N;
+    for (int i = 0; i < N; ++i) {
+        int num, s, b;
+        cin >> num >> s >> b;
+
+        for (int j = 100; j <= 999; ++j) {
+            // 세 개 숫자가 같은 경우랑 0이 있는 경우는 제외
+            string tmp = to_string(j);
+            if (tmp[0] == tmp[1] || tmp[1] == tmp[2] || tmp[0] == tmp[2]
+                || tmp[0] == '0' || tmp[1] == '0' || tmp[2] == '0')
+                continue;
+
+            // 첫번째 조건과 일치하는건 true
+            if (i == 0) {
+                if (match(s, b, j, num))
+                    arr[j] = true;
+            }
+            // 두번째 부터는 이전 조건을 만족하면서 일치하는지 확인. 일치 안하면 다시 false
+            else {
+                if (arr[j] && !match(s, b, j, num))
+                    arr[j] = false;
+            }
+        }
+    }
+
+    int ret = 0;
+    for (int i = 100; i <= 999; ++i) {
+        if (arr[i])
+            ret++;
+    }
+
+    cout << ret;
+
+    return 0;
+}
+
+
+//////////////////////////////////
+
 #include <iostream>
 #include <vector>
 #include <algorithm>
