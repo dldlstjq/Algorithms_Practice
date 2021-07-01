@@ -8,6 +8,76 @@ DP[a][b][c] = d의 의미는 "(a, b)에 존재하는 알파벳을 찾고자하�
 나올 수 있는 정답의 갯수 갯수는 d개입니다.
 
 */
+
+// 2021.07.01 정답을 맞은 코드랑 거의 비슷한데 틀렸다가 뜬다. 거의 똑같은데 왜 안되는지 이유를 모르겠다.
+// dfs+dp 문제이고 dp를 이용할때 3차원으로 써야 답이 나온다. 인덱스를 빼먹지 말자.
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+const int MAX = 100 + 1;
+int N, M, K;
+char board[MAX][MAX];
+int cache[MAX][MAX][80];
+
+int dy[4] = { -1,0,1,0 };
+int dx[4] = { 0,1,0,-1 };
+string word;
+
+int solve(int y, int x, int idx) {
+    if (idx == word.length()) {
+        return 1;
+    }
+
+    int& ret = cache[y][x][idx];
+    if (ret != -1)return ret;
+
+    ret = 0;
+    for (int k = 1; k <= K; ++k) {
+        for (int d = 0; d < 4; ++d) {
+            int ny = y + dy[d] * k;
+            int nx = x + dx[d] * k;
+
+            if (0 <= ny && ny < N && 0 <= nx && nx < M) {
+                if (board[ny][nx] == word[idx])
+                    ret += solve(ny, nx, idx + 1);
+            }
+        }
+    }
+    return ret;
+}
+
+int main() {
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+
+    cin >> N >> M >> K;
+
+    for (int i = 0; i < N; ++i)
+        for (int j = 0; j < M; ++j)
+            cin >> board[i][j];
+
+    cin >> word;
+
+    memset(cache, -1, sizeof(cache));
+
+    int cnt = 0;
+    for (int i = 0; i < N; ++i) {
+        for (int j = 0; j < M; ++j) {
+            if (board[i][j] == word[0]) {
+                cnt += solve(i, j, 1);
+            }
+
+        }
+    }
+
+    cout << cnt;
+
+    return 0;
+}
+
+
+////////////////////////////////
 #include <iostream>
 #include <cstring>
 #include <string>
