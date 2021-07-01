@@ -3,6 +3,10 @@ A, B 각 배열에 대한 부 배열을 구해 합을 저장한다.
 그 후 A 부 배열의 원소와 B 부 배열의 원소를 더해 T를 만족하는 것을 lower, upper_bound를 이용해 찾는다.
 */
 
+// 2021.07.01 완전탐색으로 분류되어 있어서 완탐을 쓰려 했는데 부분합을 이용해야 했다.
+// 부 배열은 연속된 인덱스가 부 배열이다. 따라서 0,3 이렇게 떨어진 배열은 부 배열이 아니다.
+// 각 배열의 모든 부분 합을 구해서 lower_bound, upper_bound를 써서 구하면 답이 나오는데 lower, upper_bound를 안쓴지 오래돼서 생각이 안났다.
+
 #include <iostream>
 #include <vector>
 #include <algorithm>
