@@ -5,6 +5,78 @@
 그리고 부등호에 맞게 순열을 돌려서 맞는 순열이 나오면 출력한다.
 */
 
+// 2021.07.02 순열을 이용하지 않고 백트래킹으로 풀어도 된다. 다만 숫자를 비교할때 0이 앞에 오면 0이 삭제되기 때문에 string 형으로 비교해야한다.
+// 가장 먼저 나오는게 제일 작은 숫자이고 제일 나중에 올수록 큰 숫자여서 이렇게 저장하면 된다.
+#include <iostream> 
+#include <vector> 
+#include <algorithm>
+#include <string>
+#include <cstring>
+using namespace std;
+
+// 부등호 있는걸 겹쳐서 저장.
+// 0~9까지 백트래킹으로 검사.
+int k;
+vector<char> v;
+bool visited[10];
+string max_num;
+string min_num;
+
+bool possible(int i, int j, int k) {
+    if (k == '<')
+        return i < j;
+    if (k == '>')
+        return i > j;
+    return true;
+}
+
+void solve(int cnt, string s) {
+    if (cnt == k + 1) {
+        if (!min_num.size())
+            min_num = s;
+        else
+            max_num = s;
+        return;
+    }
+
+
+    for (int i = 0; i <= 9; ++i) {
+        if (visited[i])
+            continue;
+
+        if (cnt == 0 || possible(s[cnt - 1], i + '0', v[cnt - 1])) {
+            visited[i] = true;
+            solve(cnt + 1, s + to_string(i));
+            visited[i] = false;
+        }
+    }
+}
+
+int main(int argc, char** argv) {
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    cout.tie(0);
+
+    cin >> k;
+    for (int i = 0; i < k; ++i) {
+        char c;
+        cin >> c;
+        v.push_back(c);
+    }
+
+    memset(visited, false, sizeof(visited));
+
+    solve(0, "");
+
+    cout << max_num << '\n' << min_num;
+
+
+    return 0;
+}
+
+
+//////////////////////////////////////////////
+
 #include <iostream>
 #include <vector>
 #include <algorithm>
