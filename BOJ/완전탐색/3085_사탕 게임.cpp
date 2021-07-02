@@ -5,6 +5,100 @@
 구하는 것이 아니라 처음부터 하나씩 다 살펴보는 것이 핵심이었다.
 */
 
+// 2021.07.02 서로 인접한 두 개만 바꾸면 되기 때문에 현재 위치에서 오른쪽, 아래만 바꾼 뒤 전체 배열을 확인한다.
+// 전체 개수 확인 시 배열 인덱스와 길이 체크를 잘 해야 된다.
+#include <iostream> 
+#include <vector> 
+#include <algorithm>
+#include <queue>
+#include <string>
+using namespace std;
+
+const int MAX = 50 + 1;
+int N;
+char board[MAX][MAX];
+bool visited[MAX][MAX];
+
+int dy[4] = { 0,1 };
+int dx[4] = { 1,0 };
+int ret;
+
+void check() {
+	// 행
+	for (int i = 0; i < N; ++i) {
+		int sum = 1;
+		for (int j = 1; j < N; ++j) {
+			if (board[i][j - 1] == board[i][j])
+				sum++;
+			else {
+				// 한 행에서 중간에 끊길 때 확인
+				ret = max(ret, sum);
+				sum = 1;
+			}
+		}
+		// 한 행이 끝날 때 확인
+		ret = max(ret, sum);
+	}
+
+	// 열
+	for (int i = 0; i < N; ++i) {
+		int sum = 1;
+		for (int j = 1; j < N; ++j) {
+			if (board[j - 1][i] == board[j][i])
+				sum++;
+			else {
+				ret = max(ret, sum);
+				sum = 1;
+			}
+		}
+		ret = max(ret, sum);
+	}
+
+
+}
+
+void solve(int y, int x, int sum) {
+	for (int i = 0; i < 2; ++i) {
+		int ny = y + dy[i];
+		int nx = x + dx[i];
+
+		// 범위 밖
+		if (!(0 <= ny && ny < N && 0 <= nx && nx < N))
+			continue;
+
+		// 같은 문자
+		if (visited[ny][nx] || board[y][x] == board[ny][nx])
+			continue;
+
+		swap(board[y][x], board[ny][nx]);
+		check();
+		swap(board[y][x], board[ny][nx]);
+	}
+}
+
+int main(int argc, char** argv) {
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+	cout.tie(0);
+
+	cin >> N;
+	for (int i = 0; i < N; ++i)
+		for (int j = 0; j < N; ++j)
+			cin >> board[i][j];
+
+	for (int i = 0; i < N; ++i)
+		for (int j = 0; j < N - 1; ++j) {
+			solve(i, j, 0);
+		}
+
+	cout << ret;
+
+
+	return 0;
+}
+
+/////////////////////////////////
+
 #include <iostream>
 #include <vector>
 #include <algorithm>
