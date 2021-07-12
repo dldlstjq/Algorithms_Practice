@@ -16,6 +16,8 @@
 
 */
 
+// 2021.07.12 n_queen을 다시 한번 꼭 보면 좋겠다.
+
 #include <iostream>
 using namespace std;
 
