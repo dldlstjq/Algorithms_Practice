@@ -3,6 +3,58 @@
 거의 다 푼 줄 알았는데 인덱스 설정에서 막혀서 풀지 못했다.
 다행히 그렇게 이해하기 어려운 재귀함수는 아니었다.
 */
+
+// 2021.07.02 파라미터 값만 잘 설정하면 금방 풀린다.
+#include <iostream> 
+#include <vector> 
+#include <algorithm>
+using namespace std;
+
+int k;
+vector<int> v;
+
+void solve(int idx, int num, vector<int> lotto) {
+    if (num == 6) {
+        for (int i = 0; i < num; ++i)
+            cout << lotto[i] << ' ';
+        cout << "\n";
+        return;
+    }
+
+    for (int i = idx; i < k; ++i) {
+        lotto.push_back(v[i]);
+        solve(i + 1, num + 1, lotto);
+        lotto.pop_back();
+    }
+}
+
+int main(int argc, char** argv) {
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    cout.tie(0);
+
+    while (1) {
+        v.clear();
+        cin >> k;
+        if (k == 0)
+            break;
+        for (int i = 0; i < k; ++i) {
+            int num;
+            cin >> num;
+            v.push_back(num);
+        }
+        vector<int> lotto;
+        solve(0, 0, lotto);
+        cout << "\n";
+    }
+
+
+    return 0;
+}
+
+
+///////////////////////////////////////////
+
 #include <iostream>
 #include <cstring>
 #include <string>
