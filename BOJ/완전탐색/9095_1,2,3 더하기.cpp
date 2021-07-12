@@ -3,7 +3,22 @@
 DP는 간단하게 4번째부터 점화식이 성립한다.
 */
 
-//DP 코드
+// 2021.07.12 dp 탑다운
+int solve(int num) {
+    if (num == 0)
+        return 1;
+
+    if (num < 0)
+        return 0;
+
+    int& ret = cache[num];
+    if (ret != -1)return ret;
+    ret = 0;
+    ret = solve(num - 1) + solve(num - 2) + solve(num - 3);
+    return ret;
+}
+
+//DP 코드 바텀 업
 #include <iostream>
 using namespace std;
 
