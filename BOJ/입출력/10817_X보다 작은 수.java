@@ -40,31 +40,26 @@ public class Main {
 // scanner 풀이
 import java.io.*;
 import java.util.Scanner;
-import java.util.StringTokenizer;
 
 public class Main {
 	final static int MAX = 10000+1;
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
 		
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+		Scanner sc = new Scanner(System.in);
 		
-		StringTokenizer st = new StringTokenizer(br.readLine(), " ");
+		int N=sc.nextInt();
+		int X=sc.nextInt();
 		
-		int N = Integer.parseInt(st.nextToken());
-		int X = Integer.parseInt(st.nextToken());
+		// 문자열 붙이기
+		StringBuilder sb = new StringBuilder();
 		
-		st = new StringTokenizer(br.readLine(), " ");
 		for(int i=0; i<N; ++i) {
-			int value = Integer.parseInt(st.nextToken());
-			if(value<X)
-				bw.write(value + " ");
+			int num = sc.nextInt();
+			if(num< X)
+				sb.append(num+" ");
 		}
-		
-		br.close();
-		bw.flush();
-		bw.close();
+		System.out.println(sb);	
 	}
 
 }
