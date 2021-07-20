@@ -15,6 +15,106 @@
 그러면 머리와 꼬리가 같은 경우를 나누지 않고 사과를 먹었는지 안먹었는지만 고려하기 때문에 더 짧은 코드가 나왔다.
 */
 
+// 2021.07.30 확실히 첫 풀이보다 더 간단하게 풀 수 있었다. 머리 하나로 시작해서 사과가 있으면 이동한 좌표를 삽입하고
+// 사과가 없으면 꼬리를 하나씩 없애는 것으로 구현했다. 머리를 이동하기전에 꼬리부터 없애고 머리를 이동해야 사과 여부를 확인할 수 있다.
+// 초와 방향은 벡터에 저장하고 하나씩 꺼냈는데 시간이 똑같을 때 까지 이동하도록 구현하는 것이 더 좋은 것 같다.
+#include <iostream> 
+#include <vector> 
+#include <algorithm>
+#include <deque>
+using namespace std;
+
+struct snake {
+    int y, x;
+};
+
+const int MAX = 100 + 2;
+int N, K, L;
+int board[MAX][MAX];
+
+int dy[4] = { -1,0,1,0 };
+int dx[4] = { 0,1,0,-1 };
+vector<pair<int, char>> v;
+
+int cnt;
+
+void move_snake() {
+    deque<snake> dq;
+    dq.push_back({ 0,0 });
+    board[0][0] = -1;
+    int idx = 0;    //방향 바꾸는 벡터 인덱스
+    int dir = 1;    // 뱀 방향
+    while (1) {
+        snake head = dq.front();
+
+        // 특정 초에 방향 바꾼다.
+        // idx<L을 안해주면 v[idx].first에서 idx가 벡터크기를 벗어날때 에러가 난다.
+        if (idx < L && cnt == v[idx].first) {
+            if (v[idx].second == 'L')
+                dir = (dir + 3) % 4;
+            else
+                dir = (dir + 1) % 4;
+            idx++;
+        }
+        cnt++;
+
+        head.y += dy[dir];
+        head.x += dx[dir];
+
+        // 벽에 부딪히면 끝
+        if (!(head.y >= 0 && head.y < N && head.x >= 0 && head.x < N)) {
+            cout << cnt;
+            return;
+        }
+        // 몸과 부딪히면 끝
+        if (board[head.y][head.x] == -1) {
+            cout << cnt;
+            return;
+        }
+
+        // 움직인 머리에 사과가 없으면 꼬리 감소
+        if (board[head.y][head.x] == 0) {
+            board[dq.back().y][dq.back().x] = 0;
+            dq.pop_back();
+        }
+
+        // 머리는 움직임
+        // 머리부터 움직이면 움직인 머리에 사과가 있는지 없는지 여부를 확인할 수 없다.
+        dq.push_front({ head.y, head.x });
+        board[head.y][head.x] = -1;
+    }
+
+}
+
+int main(int argc, char** argv) {
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    cout.tie(0);
+
+    cin >> N >> K;
+    for (int i = 0; i < K; ++i) {
+        int y, x;
+        cin >> y >> x;
+        board[y - 1][x - 1] = 1;    //사과
+    }
+
+    cin >> L;
+    for (int i = 0; i < L; ++i) {
+        int sec;
+        char ch;
+        cin >> sec >> ch;
+        v.push_back({ sec,ch });
+    }
+
+    move_snake();
+
+    return 0;
+}
+
+
+
+/////////////////////////
+// 첫 풀이
 #include <iostream>
 #include <vector>
 #include <algorithm>
