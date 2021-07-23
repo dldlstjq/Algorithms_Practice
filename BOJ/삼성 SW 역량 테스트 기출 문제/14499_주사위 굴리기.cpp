@@ -7,6 +7,114 @@
 움직였을 때 이전 위치가 현재의 위치 어디로 이동하는지는 파악한 후 값을 넣어줄 때 반대로 넣는 실수도 하면서 시간이 너무 오래걸렸다.
 */
 
+/*
+2021.07.22 주사위 평면도를 2차원 배열에 넣고 이동할때마다 바뀌는 면의 숫자를 적절하게 옮겼다.
+처음 풀 때와 달리 빨리 해결할 수 있었지만 dx, dy설정이 헷갈렸고 copy에서 주사위 평면도 가로, 세로를 넣어줘야하는데
+N, M 을 넣어줘서 복사가 제대로 안됐다. 조금만 더 침착하게 하면 빨리 풀 수 있는데 너무 성급하게 하면 안될 것 같다.
+
+*/
+#include <iostream>
+using namespace std;
+
+const int MAX = 20 + 1;
+int N, M;
+int x, y, K;
+int map[MAX][MAX];
+int tmp[4][3];
+int dice[4][3];
+
+int dx[4] = { 0,0,-1,1 };
+int dy[4] = { 1,-1,0,0 };
+
+void copy() {
+    for (int i = 0; i < 4; ++i)
+        for (int j = 0; j < 3; ++j)
+            tmp[i][j] = dice[i][j];
+}
+
+void north() {
+    dice[0][1] = tmp[1][1];
+    dice[1][1] = tmp[2][1];
+    dice[2][1] = tmp[3][1];
+    dice[3][1] = tmp[0][1];
+}
+
+void south() {
+    dice[0][1] = tmp[3][1];
+    dice[1][1] = tmp[0][1];
+    dice[2][1] = tmp[1][1];
+    dice[3][1] = tmp[2][1];
+}
+
+void east() {
+    dice[1][0] = tmp[3][1];
+    dice[1][1] = tmp[1][0];
+    dice[1][2] = tmp[1][1];
+    dice[3][1] = tmp[1][2];
+}
+
+void west() {
+    dice[1][0] = tmp[1][1];
+    dice[1][1] = tmp[1][2];
+    dice[1][2] = tmp[3][1];
+    dice[3][1] = tmp[1][0];
+}
+
+void move(int dir) {
+    x += dx[dir];
+    y += dy[dir];
+
+    if (!(0 <= x && x < N && 0 <= y && y < M)) {
+        x -= dx[dir];
+        y -= dy[dir];
+        return;
+    }
+
+
+    switch (dir) {
+    case 0:east(); break;
+    case 1:west(); break;
+    case 2:north(); break;
+    case 3:south();
+    }
+
+    // 이동칸에 쓰여있는 수가 0이면 주사위 바닥면에 있는 수가 칸에 복사
+    if (!map[x][y]) {
+        map[x][y] = dice[3][1];
+    }
+
+    // 0이 아니면 칸에 쓰여있는 수가 주사위 바닥면으로 복사
+    else {
+        dice[3][1] = map[x][y];
+        map[x][y] = 0;
+    }
+    cout << dice[1][1] << "\n";
+}
+
+int main(int argc, char** argv) {
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    cout.tie(0);
+
+    cin >> N >> M >> x >> y >> K;
+
+    for (int i = 0; i < N; ++i)
+        for (int j = 0; j < M; ++j)
+            cin >> map[i][j];
+
+    for (int i = 0; i < K; ++i) {
+        int order;
+        cin >> order;
+        copy();
+        move(order - 1);
+    }
+
+    return 0;
+}
+
+
+/////////////////////////////////////////
+
 #include <iostream>
 using namespace std;
 
