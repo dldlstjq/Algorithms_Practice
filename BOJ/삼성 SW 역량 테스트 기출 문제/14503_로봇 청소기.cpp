@@ -12,6 +12,95 @@
 이런 구현 문제는 문제 조건을 확실히 잘 해석해서 그대로 조건을 따라가야 하는 것 같다.
 */
 
+/*
+2021.07.25 
+첫 시도에 바로 해결하지 못했는데 위의 1번과 같은 이유에서였다. 방향을 잘못 잡아 틀렸고
+경계 값 체크를 하지 않았는데 통과가 됐다. 만약 경계를 넘어서는 경우가 있었다면 또 틀렸을 가능성이 있기 때문에
+방향 이동 문제는 경계값을 항상 체크하는 버릇을 들이자. 그리고 문제도 다시 잘 읽어봐야 한다.
+
+*/
+// 2021.07.25 풀이
+#include <iostream> 
+#include <vector> 
+#include <algorithm>
+using namespace std;
+
+const int MAX = 50 + 3;
+int N, M;
+int r, c, d;
+int map[MAX][MAX];
+
+int dy[4] = { -1,0,1,0 };
+int dx[4] = { 0,1,0,-1 };
+
+void clean() {
+	// 현재 위치 청소
+	map[r][c] = 2;
+	while (1) {
+		int i = 0;
+		for (i = 0; i < 4; ++i) {
+			int dir = (d + 3) % 4;
+
+			// 왼쪽 방향 검사. 청소하지 않았으면 회전한 다음 한칸 전진
+			if (map[r + dy[dir]][c + dx[dir]] == 0) {
+				d = (d + 3) % 4;
+				r += dy[d];
+				c += dx[d];
+				map[r][c] = 2;
+				break;
+			}
+
+			// 왼쪽 방향 갈 수 없으면 회전
+			else if (map[r + dy[dir]][c + dx[dir]] != 0)
+				d = (d + 3) % 4;
+			continue;
+
+		}
+
+		// 네 방향 모두 청소되었을 때 
+		if (i == 4) {
+			// 후진 방향이 벽이면 종료
+			if (map[r - dy[d]][c - dx[d]] == 1)
+				break;
+			r -= dy[d];
+			c -= dx[d];
+		}
+	}
+
+
+}
+
+int clean_area() {
+	int ret = 0;
+	for (int i = 0; i < N; ++i)
+		for (int j = 0; j < M; ++j)
+			if (map[i][j] == 2)
+				ret++;
+	return ret;
+}
+
+int main(int argc, char** argv) {
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+	cout.tie(0);
+
+	cin >> N >> M;
+
+	cin >> r >> c >> d;
+
+	for (int i = 0; i < N; ++i)
+		for (int j = 0; j < M; ++j)
+			cin >> map[i][j];
+
+	clean();
+	cout << clean_area();
+
+	return 0;
+}
+
+
+//////////////////////////////////
+
 #include <iostream>
 #include <vector>
 #include <algorithm>
