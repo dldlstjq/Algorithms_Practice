@@ -3,7 +3,10 @@
 반전은 인덱스 설정만 하면 쉽게 할 수 있고 회전이 문제였는데
 r, c라는 인덱스를 하나 더 줘서 돌아가게 설정했다.
 이건 다른 사람들 풀이를 보면서 좀 더 간단하고 쉬운 방법을 찾아서 내것으로 만들어야겠다.
+수정: 90도 회전을 더 깔끔하게 변경. 90도 회전은 이 방법을 이용하자.
 */
+
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.StringTokenizer;
@@ -42,34 +45,30 @@ public class Main {
 	
 	// 오른족으로 90도 회전
 	static void Rotate_Three() {
-		int r=0, c=N-1;
-		for(int i=0; i<N; ++i) {
-			for(int j=0; j<M; ++j) {
-				arr[r++][c] = tmp[i][j];
-			}
-			c--;
-			r=0;
-		}
 		// 회전했으므로 N과 M을 서로 교환
 		int box=N;
 		N=M;
 		M=box;
+		
+		for(int i=0; i<N; ++i) {
+			for(int j=0; j<M; ++j) {
+				arr[i][j] = tmp[box-1-j][i];
+			}
+		}
 	}
 	
 	// 왼쪽으로 90도 회전
 	static void Rotate_Four() {
-		int r=M-1, c=0;
+		// 회전했으므로 N과 M을 서로 교환
+		int box=M;
+		M=N;
+		N=box;
+		
 		for(int i=0; i<N; ++i) {
 			for(int j=0; j<M; ++j) {
-				arr[r--][c] = tmp[i][j];
+				arr[i][j] = tmp[j][box-1-i];
 			}
-			c++;
-			r=M-1;
 		}
-		// 회전했으므로 N과 M을 서로 교환
-		int box=N;
-		N=M;
-		M=box;
 	}
 	
 	// N/2 x M/2로 나눠어 시계방향 이동
@@ -157,5 +156,6 @@ public class Main {
 			sb.append('\n');
 		}
 		System.out.println(sb);
+		
 	}
 }
