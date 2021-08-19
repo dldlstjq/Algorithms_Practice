@@ -1,7 +1,35 @@
 /*
 처음엔 TSP문제인줄 알았지만 단순히 경로 길이의 최소를 구하면 됐다.
 최대가 10이라서 순열을 이용해 풀어도되고 백트래킹을 하면 시간이 더 적게 걸린다.
+순열: 1,754 ms
+np: 852 ms
+백트래킹: 217 ms
 */
+
+// 백트래킹
+private static void perm( int idx, Point prev, int sum) {
+		// 계산한 값이 minDist보다 크면 더 계산할 필요 없다. 백트래킹
+		if(sum >= minDist)
+			return;
+		
+		// 순열을 다 만들었으면 거리를 계산한다.
+		if(idx == N) {
+			sum += home.dist(prev);
+			minDist = Math.min(minDist, sum);
+			return;
+		}
+		
+		// 고객 좌표를 순열로 모두 구한다.
+		for(int i=0; i<N; ++i) {
+			if(visited[i]) continue;
+			visited[i] = true;
+			perm(idx+1, customer[i], sum+customer[i].dist(prev));
+			visited[i] = false;
+		}
+	}
+
+// 호출은 perm(0, company, 0);
+
 
 // 순열 풀이
 import java.io.BufferedReader;
