@@ -5,8 +5,41 @@
 
 삼성유형은 유독 배열을 복사하고 복사한 배열로 수행한 뒤 다시 원배열로 돌아오는 문제가 많은 것 같다.
 연습이 숙달되면 1시간내에 문제를 푸는것을 목표로 해야겠다.
+
+-------------------------------------------------------------------------------
+교수님 풀이를 보고 조합으로 해결해야 한다는 것을 배웠다.
+내 풀이는 순열풀이로 123 312 213 등 같은 벽을 세우더라도 세우는 순서에 따라 달라져서
+같은 경우라도 다 다르게 보고 진행하기 때문에 불필요한 시간이 걸리게 된다.
+조합을 사용하면 같은 경우를 한 번만 보기 때문에 불필요한 시간을 줄일 수 있게 된다.
 */
 
+//조합 풀이
+	static void combination(int wall, int start, int[][] arr) {
+		// 벽을 다 세웠으면 바이러스 퍼지고 안전영역 계산
+		if(wall == 3) {
+			// tmp에다가 바이러스를 퍼트린다.
+			int tmp[][] = new int[N][M];
+			copyArr(arr, tmp);
+			spreadVirus(tmp);
+			result = Math.max(result, countSafeArea(tmp));
+			return;
+		}
+		
+		for(int i=0; i<N*M; ++i) {
+			int r = i/M;
+			int c = i%M;
+			
+			if(arr[r][c] == 0) {
+				arr[r][c] = 1;	// 벽 설치
+				combination(wall+1, i+1, arr);
+				arr[r][c] = 0;	// 원상태 복귀
+			}
+		}
+	}
+
+
+
+// 순열 풀이
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.LinkedList;
