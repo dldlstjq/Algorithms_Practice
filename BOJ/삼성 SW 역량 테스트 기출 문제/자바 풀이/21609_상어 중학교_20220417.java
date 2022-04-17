@@ -122,6 +122,7 @@ public class Main
             
 			int start = -1;
 			for(int j=N-1; j>=0; --j) {
+				// 검은 블록을 만나는 순간 list에 저장한 블록을 start부터 현재 위치 전까지 넣어준다.
 				if(map[j][i] == -1) {
 					int idx=0;
 					
