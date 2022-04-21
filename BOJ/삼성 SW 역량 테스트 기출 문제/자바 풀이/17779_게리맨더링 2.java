@@ -117,6 +117,7 @@ public class Main {
 		int sum=0;
 		for(int i=1; i<x+d1; ++i) {
 			for(int j=1; j<=y; ++j) {
+				// 5선거구 경계선을 만나면 바로 다음 행 탐색
 				if(area[i][j]==5) break;
 				area[i][j] =1;
 				sum+=person[i][j];
@@ -131,6 +132,7 @@ public class Main {
 		int sum=0;
 		for(int i=1; i<=x+d2; ++i) {
 			for(int j=y+1; j<=N; ++j) {
+				// 5경계선을 만날때마다 five 갱신하고 j가 5보다 작거나 같으면 5구역 안에 있는 것.
 				if(area[i][j] == 5 ) five=j;
 				else if(five>=j) continue;
 				else {
@@ -149,6 +151,7 @@ public class Main {
 		int sum=0;
 		for(int i=x+d1; i<=N; ++i) {
 			for(int j=1; j<y-d1+d2; ++j) {
+				// 5선거구 경계선을 만나면 바로 다음 행 탐색
 				if(area[i][j]==5) break;
 				area[i][j] =3;
 				sum+=person[i][j];
@@ -165,6 +168,8 @@ public class Main {
 		int sum=0;
 		for(int i=x+d2+1; i<=N; ++i) {
 			for(int j=N; j>=y-d1+d2; --j){
+				// 4번의 경우 반대로 N열부터 시작해서 감소하는 방식
+				// 5경계선을 만날때마다 five 갱신하고 j가 5보다 작으면 5구역 안에 있는 것.
 				if(area[i][j] == 5 ) five=j;
 				else if(five>j) continue;
 				else {
